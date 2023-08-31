@@ -2,16 +2,19 @@ import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:klondike/components/components.dart';
+import 'package:klondike/interface/interface.dart';
 import 'package:klondike/klondike.dart';
 
-class FoundationPile extends PositionComponent {
+class FoundationPile extends PositionComponent implements Pile {
   FoundationPile(int intSuit, {super.position})
       : suit = Suit.fromInt(intSuit),
         super(size: KlondikeGame.cardSize);
   final Suit suit;
   final List<Card> _cards = [];
+  @override
   void acquireCard(Card card) {
     assert(card.isFaceUp);
+    card.pile = this;
     card.position = position;
     card.priority = _cards.length;
     _cards.add(card);
@@ -24,7 +27,7 @@ class FoundationPile extends PositionComponent {
   late final _suitPaint = Paint()
     ..color = suit.isRed ? const Color(0x3A000000) : const Color(0x64000000)
     ..blendMode = BlendMode.luminosity;
-    
+
   @override
   void render(Canvas canvas) {
     canvas.drawRRect(KlondikeGame.cardRRect, _borderPaint);
@@ -36,5 +39,28 @@ class FoundationPile extends PositionComponent {
       overridePaint: _suitPaint,
     );
     super.render(canvas);
+  }
+
+  @override
+  bool canMoveCard(Card card) => _cards.isNotEmpty && card == _cards.last;
+
+  @override
+  bool canAcceptCard(Card card) {
+    final topCardRank = _cards.isEmpty ? 0 : _cards.last.rank.value;
+    return card.suit == suit &&
+        card.rank.value == topCardRank + 1 &&
+        card.attachedCards.isEmpty;
+  }
+
+  @override
+  void removeCard(Card card) {
+    assert(canMoveCard(card));
+    _cards.removeLast();
+  }
+
+  @override
+  void returnCard(Card card) {
+    card.position = position;
+    card.priority = _cards.indexOf(card);
   }
 }

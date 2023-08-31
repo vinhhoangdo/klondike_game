@@ -2,9 +2,13 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flame/components.dart';
+import 'package:flame/events.dart';
+import 'package:flame/game.dart';
+import 'package:klondike/components/components.dart';
+import 'package:klondike/interface/interface.dart';
 import 'package:klondike/klondike.dart';
 
-class Card extends PositionComponent {
+class Card extends PositionComponent with DragCallbacks {
   Card(int intRank, int intSuit)
       : rank = Rank.fromInt(intRank),
         suit = Suit.fromInt(intSuit),
@@ -13,6 +17,9 @@ class Card extends PositionComponent {
   final Rank rank;
   final Suit suit;
   bool _faceUp;
+  bool _isDragging = false;
+  Pile? pile;
+  final List<Card> attachedCards = [];
 
   bool get isFaceUp => _faceUp;
   bool get isFaceDown => !_faceUp;
@@ -208,4 +215,66 @@ class Card extends PositionComponent {
   }
 
   //#endregion
+
+  // DragCallbacks region
+  @override
+  void onDragStart(DragStartEvent event) {
+    super.onDragStart(event);
+    if (pile?.canMoveCard(this) ?? false) {
+      priority = 100;
+      _isDragging = true;
+      if (pile is TableauPile) {
+        attachedCards.clear();
+        final extraCards = (pile! as TableauPile).cardsOnTop(this);
+        for (final card in extraCards) {
+          card.priority = attachedCards.length + 101;
+          attachedCards.add(card);
+        }
+      }
+    }
+  }
+
+  @override
+  void onDragUpdate(DragUpdateEvent event) {
+    super.onDragUpdate(event);
+    if (!_isDragging) {
+      return;
+    }
+    final cameraZoom = (findGame()! as FlameGame)
+        .firstChild<CameraComponent>()!
+        .viewfinder
+        .zoom;
+    final delta = event.delta / cameraZoom;
+    position.add(delta);
+    attachedCards.forEach((card) => card.position.add(delta));
+  }
+
+  @override
+  void onDragEnd(DragEndEvent event) {
+    super.onDragEnd(event);
+    if (!_isDragging) {
+      return;
+    }
+    _isDragging = false;
+    final dropPiles = parent!
+        .componentsAtPoint(position + size / 2)
+        .whereType<Pile>()
+        .toList();
+    if (dropPiles.isNotEmpty) {
+      if (dropPiles.first.canAcceptCard(this)) {
+        pile!.removeCard(this);
+        dropPiles.first.acquireCard(this);
+        if (attachedCards.isNotEmpty) {
+          attachedCards.forEach((card) => dropPiles.first.acquireCard(card));
+          attachedCards.clear();
+        }
+        return;
+      }
+    }
+    pile!.returnCard(this);
+    if (attachedCards.isNotEmpty) {
+      attachedCards.forEach((card) => pile!.returnCard(card));
+      attachedCards.clear();
+    }
+  }
 }
