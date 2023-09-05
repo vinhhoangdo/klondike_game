@@ -5,6 +5,7 @@ import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:klondike/components/components.dart';
+import 'package:flame_audio/flame_audio.dart';
 
 class KlondikeGame extends FlameGame {
   static const int allRanks = 13;
@@ -55,8 +56,8 @@ class KlondikeGame extends FlameGame {
       ..addAll(foundations)
       ..addAll(piles);
     final camera = CameraComponent(world: world)
-      ..viewfinder.visibleGameSize =
-          Vector2(cardWidth * 7 + cardGap * 8 + 300, 4 * cardHeight + 3 * cardGap)
+      ..viewfinder.visibleGameSize = Vector2(
+          cardWidth * 7 + cardGap * 8 + 300, 4 * cardHeight + 3 * cardGap)
       ..viewfinder.position = Vector2(cardWidth * 3.5 + cardGap * 4, 0)
       ..viewfinder.anchor = Anchor.topCenter;
     addAll([camera, world]);
@@ -74,6 +75,7 @@ class KlondikeGame extends FlameGame {
       piles[i].flipTopCard();
     }
     cards.forEach(stock.acquireCard);
+    FlameAudio.play('shuffle-card.mp3');
   }
 
   void startNewGame() {

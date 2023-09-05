@@ -10,8 +10,9 @@ class TableauPile extends PositionComponent implements Pile {
 
   /// Which cards are currently placed onto this pile
   final List<Card> _cards = [];
-  final Vector2 _fanOffset1 = Vector2(0, KlondikeGame.cardHeight * 0.05);
-  final Vector2 _fanOffset2 = Vector2(0, KlondikeGame.cardHeight * 0.20);
+  final Vector2 _fanOffsetFaceDown = Vector2(0, KlondikeGame.cardHeight * 0.05);
+  final Vector2 _fanOffsetOverFlow = Vector2(0, KlondikeGame.cardHeight * 0.15);
+  final Vector2 _fanOffsetFaceUp = Vector2(0, KlondikeGame.cardHeight * 0.20);
 
   @override
   void acquireCard(Card card) {
@@ -42,12 +43,23 @@ class TableauPile extends PositionComponent implements Pile {
       return;
     }
     _cards[0].position.setFrom(position);
+    offsetCards();
+    height = KlondikeGame.cardHeight * 1.5 + _cards.last.y - _cards.first.y;
+    if (height >= KlondikeGame.cardHeight * 3.5) {
+      offsetCards(overFlow: true);
+    }
+  }
+
+  void offsetCards({bool overFlow = false}) {
     for (var i = 1; i < _cards.length; i++) {
       _cards[i].position
         ..setFrom(_cards[i - 1].position)
-        ..add(_cards[i - 1].isFaceDown ? _fanOffset1 : _fanOffset2);
+        ..add(_cards[i - 1].isFaceDown
+            ? _fanOffsetFaceDown
+            : overFlow
+                ? _fanOffsetOverFlow
+                : _fanOffsetFaceUp);
     }
-    height = KlondikeGame.cardHeight * 1.5 + _cards.last.y - _cards.first.y;
   }
 
   List<Card> cardsOnTop(Card card) {

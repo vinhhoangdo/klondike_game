@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:klondike/components/components.dart';
 import 'package:klondike/interface/interface.dart';
 import 'package:klondike/klondike.dart';
@@ -23,6 +24,7 @@ class StockPile extends PositionComponent with TapCallbacks implements Pile {
 
   @override
   void onTapUp(TapUpEvent event) {
+    FlameAudio.play('card-flip.mp3');
     final wastePile = parent!.firstChild<WastePile>()!;
     if (_cards.isEmpty) {
       wastePile.removeAllCards().reversed.forEach((card) {

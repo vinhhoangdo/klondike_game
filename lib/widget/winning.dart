@@ -8,7 +8,7 @@ class Winning extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Color(0xFF000000).withOpacity(0.5),
+      color: const Color(0xFF000000).withOpacity(0.5),
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
