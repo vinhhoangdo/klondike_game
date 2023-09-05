@@ -7,6 +7,8 @@ import 'package:flame/game.dart';
 import 'package:klondike/components/components.dart';
 
 class KlondikeGame extends FlameGame {
+  static const int allRanks = 13;
+  static const int allSuits = 4;
   static const double cardWidth = 1000.0;
   static const double cardHeight = 1400.0;
   static const double cardGap = 175.0;
@@ -16,9 +18,17 @@ class KlondikeGame extends FlameGame {
     const Rect.fromLTWH(0, 0, cardWidth, cardHeight),
     const Radius.circular(cardRadius),
   );
+  static int heartCards = 0;
+  static int diamondCards = 0;
+  static int clubCards = 0;
+  static int spadeCards = 0;
   @override
   FutureOr<void> onLoad() async {
     await Flame.images.load('klondike-sprites.png');
+    initializeGame();
+  }
+
+  void initializeGame() {
     final stock = StockPile()
       ..size = cardSize
       ..position = Vector2(cardGap, cardGap);
@@ -44,17 +54,16 @@ class KlondikeGame extends FlameGame {
       ..add(waste)
       ..addAll(foundations)
       ..addAll(piles);
-    add(world);
     final camera = CameraComponent(world: world)
       ..viewfinder.visibleGameSize =
-          Vector2(cardWidth * 7 + cardGap * 8, 4 * cardHeight + 3 * cardGap)
+          Vector2(cardWidth * 7 + cardGap * 8 + 300, 4 * cardHeight + 3 * cardGap)
       ..viewfinder.position = Vector2(cardWidth * 3.5 + cardGap * 4, 0)
       ..viewfinder.anchor = Anchor.topCenter;
-    add(camera);
+    addAll([camera, world]);
 
     final cards = [
-      for (var rank = 1; rank <= 13; rank++)
-        for (var suit = 0; suit < 4; suit++) Card(rank, suit)
+      for (var rank = 1; rank <= allRanks; rank++)
+        for (var suit = 0; suit < allSuits; suit++) Card(rank, suit)
     ];
     cards.shuffle();
     world.addAll(cards);
@@ -65,6 +74,23 @@ class KlondikeGame extends FlameGame {
       piles[i].flipTopCard();
     }
     cards.forEach(stock.acquireCard);
+  }
+
+  void startNewGame() {
+    for (final child in children) {
+      child.removeFromParent();
+    }
+    initializeGame();
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+    final totalCards = heartCards + diamondCards + clubCards + spadeCards;
+    if (totalCards == allRanks * allSuits) {
+      overlays.remove('Restart');
+      overlays.add('Winning');
+    }
   }
 }
 

@@ -7,6 +7,7 @@ import 'package:flame/game.dart';
 import 'package:klondike/components/components.dart';
 import 'package:klondike/interface/interface.dart';
 import 'package:klondike/klondike.dart';
+import 'package:klondike/objects/objects.dart';
 
 class Card extends PositionComponent with DragCallbacks {
   Card(int intRank, int intSuit)

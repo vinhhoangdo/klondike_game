@@ -30,12 +30,10 @@ class StockPile extends PositionComponent with TapCallbacks implements Pile {
         acquireCard(card);
       });
     } else {
-      for (var i = 0; i < 3; i++) {
-        if (_cards.isNotEmpty) {
-          final card = _cards.removeLast();
-          card.flip();
-          wastePile.acquireCard(card);
-        }
+      if (_cards.isNotEmpty) {
+        final card = _cards.removeLast();
+        card.flip();
+        wastePile.acquireCard(card);
       }
     }
     super.onTapUp(event);

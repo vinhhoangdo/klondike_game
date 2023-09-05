@@ -4,6 +4,7 @@ import 'package:flame/components.dart';
 import 'package:klondike/components/components.dart';
 import 'package:klondike/interface/interface.dart';
 import 'package:klondike/klondike.dart';
+import 'package:klondike/objects/objects.dart';
 
 class FoundationPile extends PositionComponent implements Pile {
   FoundationPile(int intSuit, {super.position})
@@ -11,6 +12,7 @@ class FoundationPile extends PositionComponent implements Pile {
         super(size: KlondikeGame.cardSize);
   final Suit suit;
   final List<Card> _cards = [];
+
   @override
   void acquireCard(Card card) {
     assert(card.isFaceUp);
@@ -62,5 +64,25 @@ class FoundationPile extends PositionComponent implements Pile {
   void returnCard(Card card) {
     card.position = position;
     card.priority = _cards.indexOf(card);
+  }
+
+  @override
+  void update(double dt) {
+    switch (suit.value) {
+      case 0:
+        KlondikeGame.heartCards = _cards.length;
+        break;
+      case 1:
+        KlondikeGame.diamondCards = _cards.length;
+        break;
+      case 2:
+        KlondikeGame.clubCards = _cards.length;
+        break;
+      case 3:
+        KlondikeGame.spadeCards = _cards.length;
+        break;
+      default:
+    }
+    super.update(dt);
   }
 }
