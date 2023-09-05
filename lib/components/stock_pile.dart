@@ -24,7 +24,6 @@ class StockPile extends PositionComponent with TapCallbacks implements Pile {
 
   @override
   void onTapUp(TapUpEvent event) {
-    FlameAudio.play('card-flip.mp3');
     final wastePile = parent!.firstChild<WastePile>()!;
     if (_cards.isEmpty) {
       wastePile.removeAllCards().reversed.forEach((card) {
@@ -38,6 +37,7 @@ class StockPile extends PositionComponent with TapCallbacks implements Pile {
         wastePile.acquireCard(card);
       }
     }
+    FlameAudio.play('flip-card.mp3');
     super.onTapUp(event);
   }
 

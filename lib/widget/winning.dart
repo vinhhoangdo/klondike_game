@@ -1,9 +1,21 @@
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:klondike/klondike_game.dart';
 
-class Winning extends StatelessWidget {
+class Winning extends StatefulWidget {
   final KlondikeGame game;
   const Winning({super.key, required this.game});
+
+  @override
+  State<Winning> createState() => _WinningState();
+}
+
+class _WinningState extends State<Winning> {
+  @override
+  void initState() {
+    FlameAudio.play('win.mp3');
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,9 +38,9 @@ class Winning extends StatelessWidget {
               height: 75,
               child: ElevatedButton(
                 onPressed: () {
-                  game.startNewGame();
-                  game.overlays.remove('Winning');
-                  game.overlays.add('Restart');
+                  widget.game.startNewGame();
+                  widget.game.overlays.remove('Winning');
+                  widget.game.overlays.add('Restart');
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,

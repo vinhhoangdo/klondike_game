@@ -75,7 +75,7 @@ class KlondikeGame extends FlameGame {
       piles[i].flipTopCard();
     }
     cards.forEach(stock.acquireCard);
-    FlameAudio.play('shuffle-card.mp3');
+    FlameAudio.play('shuffle-cards.mp3');
   }
 
   void startNewGame() {
