@@ -1,6 +1,7 @@
-import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:klondike/klondike_game.dart';
+import 'package:klondike/objects/objects.dart';
+import 'package:klondike/widget/widget.dart';
 
 class Winning extends StatefulWidget {
   final KlondikeGame game;
@@ -13,7 +14,7 @@ class Winning extends StatefulWidget {
 class _WinningState extends State<Winning> {
   @override
   void initState() {
-    FlameAudio.play('win.mp3');
+    playSFX('win.mp3', isMute: KlondikeGame.isMuteSound);
     super.initState();
   }
 
@@ -26,34 +27,44 @@ class _WinningState extends State<Winning> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-              'YOU WIN!',
+              'WOOHOO! YOU WIN!',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 24,
               ),
             ),
             const SizedBox(height: 40),
-            SizedBox(
-              width: 200,
-              height: 75,
-              child: ElevatedButton(
-                onPressed: () {
-                  widget.game.startNewGame();
-                  widget.game.overlays.remove('Winning');
-                  widget.game.overlays.add('Restart');
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                ),
-                child: const Text(
-                  'Play Again',
-                  style: TextStyle(
-                    fontSize: 28.0,
-                    color: Colors.black,
-                  ),
+            ElevatedButton(
+              onPressed: () {
+                widget.game.startNewGame();
+                widget.game.overlays.remove('Winning');
+                widget.game.overlays.add('Menu');
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+              ),
+              child: const Text(
+                'Restart',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  color: Colors.black,
                 ),
               ),
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    KlondikeGame.isMuteSound ? 'Sound Off' : 'Sound On',
+                    style: const TextStyle(
+                      fontSize: 20.0,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const Mute()
+                ],
+              ),
+            
           ],
         ),
       ),
