@@ -5,7 +5,7 @@ import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:klondike/components/components.dart';
-import 'package:flame_audio/flame_audio.dart';
+import 'package:klondike/objects/objects.dart';
 
 class KlondikeGame extends FlameGame {
   static const int allRanks = 13;
@@ -23,13 +23,17 @@ class KlondikeGame extends FlameGame {
   static int diamondCards = 0;
   static int clubCards = 0;
   static int spadeCards = 0;
+  static bool isMuteSound = false;
+  @override
+  Color backgroundColor() => const Color(0xFF27005D);
   @override
   FutureOr<void> onLoad() async {
     await Flame.images.load('klondike-sprites.png');
+    loadAllSFXToCache();
     initializeGame();
   }
 
-  void initializeGame() {
+  void initializeGame() async {
     final stock = StockPile()
       ..size = cardSize
       ..position = Vector2(cardGap, cardGap);
@@ -56,8 +60,8 @@ class KlondikeGame extends FlameGame {
       ..addAll(foundations)
       ..addAll(piles);
     final camera = CameraComponent(world: world)
-      ..viewfinder.visibleGameSize = Vector2(
-          cardWidth * 7 + cardGap * 8 + 300, 4 * cardHeight + 3 * cardGap)
+      ..viewfinder.visibleGameSize =
+          Vector2(cardWidth * 7 + cardGap * 8, 4 * cardHeight + 3 * cardGap)
       ..viewfinder.position = Vector2(cardWidth * 3.5 + cardGap * 4, 0)
       ..viewfinder.anchor = Anchor.topCenter;
     addAll([camera, world]);
@@ -75,7 +79,7 @@ class KlondikeGame extends FlameGame {
       piles[i].flipTopCard();
     }
     cards.forEach(stock.acquireCard);
-    FlameAudio.play('shuffle-cards.mp3');
+    playSFX('shuffle-cards.mp3', isMute: isMuteSound);
   }
 
   void startNewGame() {
@@ -90,7 +94,7 @@ class KlondikeGame extends FlameGame {
     super.update(dt);
     final totalCards = heartCards + diamondCards + clubCards + spadeCards;
     if (totalCards == allRanks * allSuits) {
-      overlays.remove('Restart');
+      overlays.remove('Menu');
       overlays.add('Winning');
     }
   }

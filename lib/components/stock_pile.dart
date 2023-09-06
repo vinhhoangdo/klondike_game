@@ -2,10 +2,10 @@ import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
-import 'package:flame_audio/flame_audio.dart';
 import 'package:klondike/components/components.dart';
 import 'package:klondike/interface/interface.dart';
 import 'package:klondike/klondike.dart';
+import 'package:klondike/objects/objects.dart';
 
 class StockPile extends PositionComponent with TapCallbacks implements Pile {
   StockPile({super.position}) : super(size: KlondikeGame.cardSize);
@@ -37,7 +37,7 @@ class StockPile extends PositionComponent with TapCallbacks implements Pile {
         wastePile.acquireCard(card);
       }
     }
-    FlameAudio.play('flip-card.mp3');
+    playSFX('flip-card.mp3',isMute: KlondikeGame.isMuteSound);
     super.onTapUp(event);
   }
 

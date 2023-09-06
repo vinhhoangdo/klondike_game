@@ -4,7 +4,6 @@ import 'dart:ui';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
-import 'package:flame_audio/flame_audio.dart';
 import 'package:klondike/components/components.dart';
 import 'package:klondike/interface/interface.dart';
 import 'package:klondike/klondike.dart';
@@ -254,7 +253,7 @@ class Card extends PositionComponent with DragCallbacks {
   @override
   void onDragEnd(DragEndEvent event) {
     super.onDragEnd(event);
-    FlameAudio.play('drop-card.mp3');
+    playSFX('flip-card.mp3', isMute: KlondikeGame.isMuteSound);
     if (!_isDragging) {
       return;
     }

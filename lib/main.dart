@@ -1,7 +1,7 @@
 import 'package:flame/game.dart';
 import 'package:flame/flame.dart';
 import 'package:flutter/material.dart';
-import 'package:klondike/widget/restart.dart';
+import 'package:klondike/widget/bottom_menu.dart';
 import 'package:klondike/widget/winning.dart';
 import 'klondike_game.dart';
 
@@ -14,10 +14,10 @@ void main() async {
       gameFactory: KlondikeGame.new,
       mouseCursor: SystemMouseCursors.grab,
       overlayBuilderMap: {
-        'Restart': (_, game) => Restart(game: game),
-        'Winning': (_, game) => Winning(game: game)
+        'Menu': (_, game) => BottomMenu(game: game),
+        'Winning': (_, game) => Winning(game: game),
       },
-      initialActiveOverlays: const ['Restart'],
+      initialActiveOverlays: const ['Menu'],
     ),
   );
 }
