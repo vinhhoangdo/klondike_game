@@ -12,20 +12,22 @@ class BottomMenu extends StatelessWidget {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Material(
-          color: Colors.transparent,
-          child: Container(
-            width: double.infinity,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5.0),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Mute(),
-                Restart(game: game),
-              ],
-            ),
-          )),
+        color: Constant.transparentColor,
+        child: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5.0),
+            color: Constant.bottomMenuBackground,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Mute(),
+              Restart(game: game),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

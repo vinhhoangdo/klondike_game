@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:klondike/klondike.dart';
 import 'package:klondike/klondike_game.dart';
 import 'package:klondike/objects/objects.dart';
 import 'package:klondike/widget/widget.dart';
@@ -29,42 +30,25 @@ class _WinningState extends State<Winning> {
             const Text(
               'WOOHOO! YOU WIN!',
               style: TextStyle(
-                color: Colors.white,
+                color: Constant.whiteTextColor,
                 fontSize: 24,
               ),
             ),
             const SizedBox(height: 40),
-            ElevatedButton(
-              onPressed: () {
-                widget.game.startNewGame();
-                widget.game.overlays.remove('Winning');
-                widget.game.overlays.add('Menu');
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-              ),
-              child: const Text(
-                'Restart',
-                style: TextStyle(
-                  fontSize: 20.0,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-            Row(
+            Restart(game: widget.game),
+            const Row(
               mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    KlondikeGame.isMuteSound ? 'Sound Off' : 'Sound On',
-                    style: const TextStyle(
-                      fontSize: 20.0,
-                      color: Colors.white,
-                    ),
+              children: [
+                Text(
+                  'Volume',
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    color: Constant.whiteTextColor,
                   ),
-                  const Mute()
-                ],
-              ),
-            
+                ),
+                Mute()
+              ],
+            ),
           ],
         ),
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:klondike/klondike.dart';
 import 'package:klondike/klondike_game.dart';
 
 class Mute extends StatefulWidget {
@@ -16,11 +17,11 @@ class _MuteState extends State<Mute> {
       child: IconButton(
         icon: KlondikeGame.isMuteSound ? const Icon(
            Icons.volume_off,
-          color: Colors.red,
+          color: Constant.redColor,
         ) :
         const Icon(
            Icons.volume_up,
-          color: Colors.green,
+          color: Constant.greenColor,
         ),
         onPressed: () {
           setState(() {

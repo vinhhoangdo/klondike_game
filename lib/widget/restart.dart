@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:klondike/klondike_game.dart';
+import 'package:klondike/klondike.dart';
 
 class Restart extends StatelessWidget {
   final KlondikeGame game;
@@ -10,12 +10,26 @@ class Restart extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: TextButton(
+        style: ButtonStyle(
+          foregroundColor: MaterialStateProperty.resolveWith<Color>(
+              (Set<MaterialState> states) {
+            if (states.contains(MaterialState.hovered)) {
+              return Constant.purpleTextColor;
+            }
+            return Constant.whiteTextColor;
+          }),
+        ),
         child: const Text(
           'Restart',
-          style: TextStyle(color: Colors.white, fontSize: 20.0),
+          style: TextStyle(fontSize: 20.0),
         ),
         onPressed: () {
           game.startNewGame();
+          if (game.hasWon) {
+            game.hasWon = false;
+            game.overlays.remove('Winning');
+            game.overlays.add('Menu');
+          }
         },
       ),
     );

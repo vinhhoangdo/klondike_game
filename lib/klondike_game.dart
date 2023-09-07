@@ -5,6 +5,7 @@ import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:klondike/components/components.dart';
+import 'package:klondike/klondike.dart';
 import 'package:klondike/objects/objects.dart';
 
 class KlondikeGame extends FlameGame {
@@ -24,8 +25,9 @@ class KlondikeGame extends FlameGame {
   static int clubCards = 0;
   static int spadeCards = 0;
   static bool isMuteSound = false;
+  bool hasWon = false;
   @override
-  Color backgroundColor() => const Color(0xFF27005D);
+  Color backgroundColor() => Constant.gameBackground;
   @override
   FutureOr<void> onLoad() async {
     await Flame.images.load('klondike-sprites.png');
@@ -96,6 +98,7 @@ class KlondikeGame extends FlameGame {
     if (totalCards == allRanks * allSuits) {
       overlays.remove('Menu');
       overlays.add('Winning');
+      hasWon = true;
     }
   }
 }
